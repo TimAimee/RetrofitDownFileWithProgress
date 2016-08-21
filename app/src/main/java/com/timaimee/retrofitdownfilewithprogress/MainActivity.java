@@ -26,17 +26,18 @@ import rx.Subscriber;
 public class MainActivity extends ActionBarActivity {
     final static String TAG = MainActivity.class.getSimpleName();
     private TextView textView;
-    public final static String DirPath = Environment.getExternalStorageDirectory() + File.separator + "Hbracelet"
+    public final static String dirPath = Environment.getExternalStorageDirectory() + File.separator + "downfile"
             + File.separator;
-    private static String filepath = DirPath + File.separator + "Hbracelet.apk";
-    private final static String URL = "http://shouji.360tpcdn.com/160812/0e45b8ab26060484fa12f9c8388b5c58/qsbk.app_129.apk";
+    private final static String filepath = dirPath + File.separator + "file.apk";
+    private final static String URL = "http://shouji.360tpcdn.com/160819/36dd9def9a9b0667adc26bac01a77b12/com.netease.cloudmusic_77.apk";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initLog();
         textView = (TextView) findViewById(R.id.progress);
+        initLog();
+        initFile();
         findViewById(R.id.download).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +53,13 @@ public class MainActivity extends ActionBarActivity {
                 .logLevel(LogLevel.FULL)        // 调试/发布 Loglevel.FULL/Loglevel.NONE 默认 Loglevel.FULL
                 .methodOffset(0)
                 .logAdapter(new CustomAndroidLogAdapter());
+    }
+
+    private void initFile() {
+        File file = new File(dirPath);
+        if (!file.exists()) {
+            file.mkdir();
+        }
     }
 
 
@@ -90,6 +98,8 @@ public class MainActivity extends ActionBarActivity {
             public void onNext(Response<ResponseBody> responseBody) {
                 Logger.t(TAG).d("down onNext");
                 if (responseBody.isSuccess()) {
+
+
                     boolean writeSuccess = writeResponseBodyToDisk(responseBody.body(), file);
                     if (writeSuccess) {
                         Logger.t(TAG).d("writesucess");
@@ -152,3 +162,4 @@ public class MainActivity extends ActionBarActivity {
 
 
 }
+
